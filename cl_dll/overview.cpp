@@ -9,14 +9,14 @@
 #include "cl_util.h"
 #include "cl_entity.h"
 #include "triangleapi.h"
-#include "vgui_TeamFortressViewport.h"
 
 // these are included for the math functions
 #include "com_model.h"
 #include "studio_util.h"
 
 #pragma warning(disable: 4244)
-
+//seems not used
+#if 0
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
@@ -52,8 +52,8 @@ int CHudOverview::Draw(float flTime)
 		return 1;
 
 	// make sure we have player info
-	gViewPort->GetAllPlayersInfo();
-
+	//gViewPort->GetAllPlayersInfo();
+	gHUD.m_Scoreboard.GetAllPlayersInfo();^
 	// calculate player size on the overview
 	int x1, y1, x2, y2;
 	float v0[3]={0,0,0}, v1[3]={64,64,0};
@@ -157,4 +157,4 @@ void CHudOverview::InitHUDData()
 //	gEngfuncs.Overview_SetDrawOverview( 1 );
 //	gEngfuncs.Overview_SetDrawInset( 0 );
 }
-
+#endif

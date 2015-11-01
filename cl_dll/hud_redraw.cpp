@@ -18,8 +18,7 @@
 #include <math.h>
 #include "hud.h"
 #include "cl_util.h"
-
-#include "vgui_TeamFortressViewport.h"
+#include "triangleapi.h"
 
 extern bool Scope;
 void DrawScope();
@@ -75,8 +74,8 @@ void CHud::Think(void)
 
 int CHud :: Redraw( float flTime, int intermission )
 {
-	if( Scope )
-		DrawScope();	
+//	if( Scope )
+//		DrawScope();	
 
 	m_fOldTime = m_flTime;	// save time of previous redraw
 	m_flTime = flTime;
@@ -88,6 +87,7 @@ int CHud :: Redraw( float flTime, int intermission )
 		m_flTimeDelta = 0;
 
 	// Bring up the scoreboard during intermission
+#if 0
 	if (gViewPort)
 	{
 		if ( m_iIntermission && !intermission )
@@ -110,8 +110,8 @@ int CHud :: Redraw( float flTime, int intermission )
 			if ( CVAR_GET_FLOAT( "hud_takesshots" ) != 0 )
 				m_flShotTime = flTime + 1.0;	// Take a screenshot in a second
 		}
-	}
-
+	}*/
+#endif
 	if (m_flShotTime && m_flShotTime < flTime)
 	{
 		gEngfuncs.pfnClientCmd("snapshot\n");
@@ -163,6 +163,18 @@ int CHud :: Redraw( float flTime, int intermission )
 		i = grgLogoFrame[iFrame] - 1;
 
 		SPR_DrawAdditive(i, x, y, NULL);
+	}
+	if( m_teamselect )
+	{
+		DrawHudString( 50, 50, 640, "Press PRIMARY ATTACK button to join T team\n", 255, 255, 255 );
+		DrawHudString( 50, 80, 640, "Press SECONDARY ATTACK button to join CT team", 255, 255, 255 );
+	}
+	if( g_progressbar_show )
+	{
+		if( gHUD.m_flTime >= g_TimeEnd )
+			g_progressbar_show = false;
+		int length = ( 200 / g_TimeLong ) * ( gHUD.m_flTime - g_TimeStart );
+		DrawHudString( 50, 100, length, "====================================================================", 255, 255, 255 );
 	}
 
 	return 1;
@@ -439,4 +451,31 @@ int CHud::GetNumWidth( int iNumber, int iFlags )
 
 }	
 
+void CHud::DrawDarkRectangle( int x, int y, int wide, int tall )
+{
+	FillRGBA( x, y, wide, tall, 0, 0, 0, 0 );
+	gEngfuncs.pTriAPI->RenderMode( kRenderTransTexture );
+	gEngfuncs.pTriAPI->Begin(TRI_QUADS);
+	gEngfuncs.pTriAPI->Color4f(0.0, 0.0, 0.0, 0.6);
+	gEngfuncs.pTriAPI->Vertex3f(x * m_flScale, (y+tall)*m_flScale, 0);
+	gEngfuncs.pTriAPI->Vertex3f(x * m_flScale, y*m_flScale, 0);
+	gEngfuncs.pTriAPI->Vertex3f((x + wide)*m_flScale, y*m_flScale, 0);
+	gEngfuncs.pTriAPI->Vertex3f((x + wide)*m_flScale, (y+tall)*m_flScale, 0);
+	gEngfuncs.pTriAPI->End();
+	FillRGBA( x+1, y, wide-1, 1, 255, 140, 0, 255 );
+	FillRGBA( x, y, 1, tall-1, 255, 140, 0, 255 );
+	FillRGBA( x+wide-1, y+1, 1, tall-1, 255, 140, 0, 255 );
+	FillRGBA( x, y+tall-1, wide-1, 1, 255, 140, 0, 255 );
+}
+
+int CHud :: DrawHudStringLen( char *szIt )
+{
+	int l = 0;
+		// draw the string until we hit the null character or a newline character
+	for ( ; *szIt != 0 && *szIt != '\n'; szIt++ )
+	{
+		l += gHUD.m_scrinfo.charWidths[ *szIt ]; // variable-width fonts look cool	
+	}
+	return l;
+}
 

@@ -22,7 +22,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "vgui_TeamFortressViewport.h"
+float color[3];
 
 DECLARE_MESSAGE( m_DeathNotice, DeathMsg );
 
@@ -106,7 +106,7 @@ int CHudDeathNotice :: Draw( float flTime )
 		rgDeathNoticeList[i].flDisplayTime = min( rgDeathNoticeList[i].flDisplayTime, gHUD.m_flTime + DEATHNOTICE_DISPLAY_TIME );
 
 		// Only draw if the viewport will let me
-		if ( gViewPort && gViewPort->AllowedToPrintText() )
+		//if ( gViewPort && gViewPort->AllowedToPrintText() )
 		{
 			// Draw the death notice
 			y = YRES(DEATHNOTICE_TOP) + 2 + (20 * i);  //!!!
@@ -184,6 +184,7 @@ int CHudDeathNotice :: MsgFunc_DeathMsg( const char *pszName, int iSize, void *p
 	int headshot = READ_BYTE();
 
 	gHUD.m_Spectator.DeathMessage(victim);
+	gHUD.m_Scoreboard.DeathMsg( killer, victim );
 	int i;
 	for (  i = 0; i < MAX_DEATHNOTICES; i++ )
 	{
@@ -196,8 +197,9 @@ int CHudDeathNotice :: MsgFunc_DeathMsg( const char *pszName, int iSize, void *p
 		i = MAX_DEATHNOTICES - 1;
 	}
 
-	if (gViewPort)
-		gViewPort->GetAllPlayersInfo();
+	//if (gViewPort)
+		//gViewPort->GetAllPlayersInfo();
+	gHUD.m_Scoreboard.GetAllPlayersInfo();
 
 	// Get the Killer's name
 	char *killer_name = g_PlayerInfoList[ killer ].name;

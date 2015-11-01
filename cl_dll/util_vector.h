@@ -17,9 +17,9 @@
 //
 
 // Misc C-runtime library headers
-#include "STDIO.H"
-#include "STDLIB.H"
-#include "MATH.H"
+#include "stdio.h"
+#include "stdlib.h"
+#include "math.h"
 
 // Header file containing definition of globalvars_t and entvars_t
 typedef int	func_t;					//
@@ -73,8 +73,8 @@ public:
 	// Construction/destruction
 	inline Vector(void)								{ }
 	inline Vector(float X, float Y, float Z)		{ x = X; y = Y; z = Z;						}
-	inline Vector(double X, double Y, double Z)		{ x = (float)X; y = (float)Y; z = (float)Z;	}
-	inline Vector(int X, int Y, int Z)				{ x = (float)X; y = (float)Y; z = (float)Z;	}
+//	inline Vector(double X, double Y, double Z)		{ x = (float)X; y = (float)Y; z = (float)Z;	}
+//	inline Vector(int X, int Y, int Z)				{ x = (float)X; y = (float)Y; z = (float)Z;	}
 	inline Vector(const Vector& v)					{ x = v.x; y = v.y; z = v.z;				} 
 	inline Vector(float rgfl[3])					{ x = rgfl[0]; y = rgfl[1]; z = rgfl[2];	}
 

@@ -90,7 +90,7 @@ struct HUDLIST {
 //
 //-----------------------------------------------------
 //
-#include "..\game_shared\voice_status.h"
+//#include "voice_status.h"
 #include "hud_spectator.h"
 
 
@@ -232,6 +232,57 @@ protected:
 //
 //-----------------------------------------------------
 //
+class CHudMOTD : public CHudBase
+{
+public:
+	int Init( void );
+	int VidInit( void );
+	int Draw( float flTime );
+	void Reset( void );
+
+	int MsgFunc_MOTD( const char *pszName, int iSize, void *pbuf );
+	void Scroll( int dir );
+	void Scroll( float amount );
+	float scroll;
+	bool m_bShow;
+
+protected:
+	static int MOTD_DISPLAY_TIME;
+	char m_szMOTD[ MAX_MOTD_LENGTH ];
+	
+	int m_iLines;
+	int m_iMaxLength;
+};
+
+
+class CHudScoreboard: public CHudBase
+{
+public:
+	int Init( void );
+	void InitHUDData( void );
+	int VidInit( void );
+	int Draw( float flTime );
+	int DrawPlayers( int xoffset, float listslot, int nameoffset = 0, int team = 0 ); // returns the ypos where it finishes drawing
+	void UserCmd_ShowScores( void );
+	void UserCmd_HideScores( void );
+	int MsgFunc_ScoreInfo( const char *pszName, int iSize, void *pbuf );
+	int MsgFunc_TeamInfo( const char *pszName, int iSize, void *pbuf );
+	int MsgFunc_TeamScore( const char *pszName, int iSize, void *pbuf );
+	int MsgFunc_TeamScores( const char *pszName, int iSize, void *pbuf );
+	int MsgFunc_TeamNames( const char *pszName, int iSize, void *pbuf );
+	void DeathMsg( int killer, int victim );
+
+	int m_iNumTeams;
+
+	int m_iLastKilledBy;
+	int m_fLastKillTime;
+	int m_iPlayerNum;
+	int m_iShowscoresHeld;
+
+	void GetAllPlayersInfo( void );
+};
+
+
 class CHudStatusBar : public CHudBase
 {
 public:
@@ -581,6 +632,7 @@ public:
 	int		m_iCurrentFOV;
 	int		m_GameMode;
 	int		m_iRes;
+	float   m_flScale;
 	cvar_t  *m_pCvarStealMouse;
 	cvar_t	*m_pCvarDraw;
 
@@ -592,6 +644,8 @@ public:
 	int DrawHudStringReverse( int xpos, int ypos, int iMinX, char *szString, int r, int g, int b );
 	int DrawHudNumberString( int xpos, int ypos, int iMinX, int iNumber, int r, int g, int b );
 	int GetNumWidth(int iNumber, int iFlags);
+	int DrawHudStringLen( char *szIt );
+	void DrawDarkRectangle( int x, int y, int wide, int tall);
 
 private:
 	// the memory for these arrays are allocated in the first call to CHud::VidInit(), when the hud.txt and associated sprites are loaded.
@@ -631,6 +685,8 @@ public:
 	CHudTextMessage m_TextMessage;
 	CHudStatusIcons m_StatusIcons;
 	CHudTimer		m_Timer;
+	CHudScoreboard	m_Scoreboard;
+	CHudMOTD	m_MOTD;
 
 	void Init( void );
 	void VidInit( void );
@@ -672,10 +728,7 @@ public:
 
 };
 
-class TeamFortressViewport;
-
 extern CHud gHUD;
-extern TeamFortressViewport *gViewPort;
 
 extern int g_iPlayerClass;
 extern int g_iTeamNumber;
@@ -683,3 +736,8 @@ extern int g_iUser1;
 extern int g_iUser2;
 extern int g_iUser3;
 
+extern bool m_teamselect;
+extern float g_TimeStart;
+extern float g_TimeEnd;
+extern float g_TimeLong;
+extern bool g_progressbar_show;

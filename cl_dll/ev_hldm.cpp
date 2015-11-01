@@ -31,7 +31,6 @@
 #include "in_defs.h"
 
 #include <string.h>
-#include <windows.h>
 
 #include "r_studioint.h"
 #include "com_model.h"

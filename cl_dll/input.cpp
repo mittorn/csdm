@@ -27,8 +27,6 @@ extern "C"
 #include <string.h>
 #include <ctype.h>
 
-#include "vgui_TeamFortressViewport.h"
-
 
 extern "C" 
 {
@@ -378,9 +376,6 @@ Return 1 to allow engine to process the key, otherwise, act on it as needed
 */
 int DLLEXPORT HUD_Key_Event( int down, int keynum, const char *pszCurrentBinding )
 {
-	if (gViewPort)
-		return gViewPort->KeyInput(down, keynum, pszCurrentBinding);
-	
 	return 1;
 }
 
@@ -525,28 +520,16 @@ void IN_Impulse (void)
 void IN_ScoreDown(void)
 {
 	KeyDown(&in_score);
-	if ( gViewPort )
-	{
-		gViewPort->ShowScoreBoard();
-	}
 }
 
 void IN_ScoreUp(void)
 {
 	KeyUp(&in_score);
-	if ( gViewPort )
-	{
-		gViewPort->HideScoreBoard();
-	}
 }
 
 void IN_MLookUp (void)
 {
 	KeyUp( &in_mlook );
-	if ( !( in_mlook.state & 1 ) && lookspring->value )
-	{
-		V_StartPitchDrift();
-	}
 }
 
 /*
@@ -634,7 +617,6 @@ void CL_AdjustAngles ( float frametime, float *viewangles )
 	}
 	if (in_klook.state & 1)
 	{
-		V_StopPitchDrift ();
 		viewangles[PITCH] -= speed*cl_pitchspeed->value * CL_KeyState (&in_forward);
 		viewangles[PITCH] += speed*cl_pitchspeed->value * CL_KeyState (&in_back);
 	}
@@ -646,7 +628,6 @@ void CL_AdjustAngles ( float frametime, float *viewangles )
 	viewangles[PITCH] += speed*cl_pitchspeed->value * down;
 
 	if (up || down)
-		V_StopPitchDrift ();
 		
 	if (viewangles[PITCH] > cl_pitchdown->value)
 		viewangles[PITCH] = cl_pitchdown->value;
@@ -741,10 +722,6 @@ void DLLEXPORT CL_CreateMove ( float frametime, struct usercmd_s *cmd, int activ
 	//
 	cmd->buttons = CL_ButtonBits( 1 );
 
-	// If they're in a modal dialog, ignore the attack button.
-	if(GetClientVoiceMgr()->IsInSquelchMode())
-		cmd->buttons &= ~IN_ATTACK;
-
 	// Using joystick?
 	if ( in_joystick->value )
 	{
@@ -800,6 +777,13 @@ int CL_ButtonBits( int bResetState )
 	if ( in_attack.state & 3 )
 	{
 		bits |= IN_ATTACK;
+		if( m_teamselect )
+		{
+			m_teamselect = false;
+			ServerCmd("jointeam 1");
+		}
+		else
+			bits |= IN_ATTACK;
 	}
 	
 	if (in_duck.state & 3)
@@ -855,6 +839,13 @@ int CL_ButtonBits( int bResetState )
 	if (in_attack2.state & 3)
 	{
 		bits |= IN_ATTACK2;
+		if( m_teamselect )
+		{
+			m_teamselect = false;
+			ServerCmd("jointeam 1");
+		}
+		else
+			bits |= IN_ATTACK2;
 	}
 
 	if (in_reload.state & 3)
@@ -979,8 +970,8 @@ void InitInput (void)
 	gEngfuncs.pfnAddCommand ("-alt1", IN_Alt1Up);
 	gEngfuncs.pfnAddCommand ("+score", IN_ScoreDown);
 	gEngfuncs.pfnAddCommand ("-score", IN_ScoreUp);
-	gEngfuncs.pfnAddCommand ("+showscores", IN_ScoreDown);
-	gEngfuncs.pfnAddCommand ("-showscores", IN_ScoreUp);
+	//gEngfuncs.pfnAddCommand ("+showscores", IN_ScoreDown);
+	//gEngfuncs.pfnAddCommand ("-showscores", IN_ScoreUp);
 	gEngfuncs.pfnAddCommand ("+graph", IN_GraphDown);
 	gEngfuncs.pfnAddCommand ("-graph", IN_GraphUp);
 	gEngfuncs.pfnAddCommand ("+break",IN_BreakDown);

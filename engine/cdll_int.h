@@ -34,6 +34,8 @@ extern "C" {
 
 typedef int SpriteHandle_t;	// handle to a graphic
 
+typedef int HSPRITE;	// handle to a graphic
+
 #define SCRINFO_SCREENFLASH 1
 #define SCRINFO_STRETCHED	2
 

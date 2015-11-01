@@ -12,6 +12,7 @@
 #include "cvardef.h"
 #include "usercmd.h"
 #include "const.h"
+#include <string.h>
 
 #include "entity_state.h"
 #include "cl_entity.h"
@@ -264,7 +265,7 @@ typedef struct pitchdrift_s
 } pitchdrift_t;
 
 static pitchdrift_t pd;
-
+#if 0
 void V_StartPitchDrift( void )
 {
 	if ( pd.laststop == gEngfuncs.GetClientTime() )
@@ -353,7 +354,7 @@ void V_DriftPitch ( struct ref_params_s *pparams )
 		pparams->cl_viewangles[PITCH] -= move;
 	}
 }
-
+#endif
 /* 
 ============================================================================== 
 						VIEW RENDERING 
@@ -507,8 +508,6 @@ void V_CalcNormalRefdef ( struct ref_params_s *pparams )
 
 	vec3_t camAngles, camForward, camRight, camUp;
 	cl_entity_t *pwater;
-
-	V_DriftPitch ( pparams );
 
 	if ( gEngfuncs.IsSpectateOnly() )
 	{
@@ -1668,7 +1667,7 @@ V_Init
 */
 void V_Init (void)
 {
-	gEngfuncs.pfnAddCommand ("centerview", V_StartPitchDrift );
+	//gEngfuncs.pfnAddCommand ("centerview", V_StartPitchDrift );
 
 	scr_ofsx			= gEngfuncs.pfnRegisterVariable( "scr_ofsx","0", 0 );
 	scr_ofsy			= gEngfuncs.pfnRegisterVariable( "scr_ofsy","0", 0 );
