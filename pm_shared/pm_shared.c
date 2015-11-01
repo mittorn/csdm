@@ -32,6 +32,8 @@
 	int		iJumpSpectator;
 	float	vJumpOrigin[3];
 	float	vJumpAngles[3];
+#else
+	vec3_t vec3_origin = {0, 0, 0};
 #endif
 
 static int pm_shared_initialized = 0;
