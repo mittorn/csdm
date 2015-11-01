@@ -468,7 +468,7 @@ void CHud::DrawDarkRectangle( int x, int y, int wide, int tall )
 	FillRGBA( x, y+tall-1, wide-1, 1, 255, 140, 0, 255 );
 }
 
-int CHud :: DrawHudStringLen( char *szIt )
+int CHud :: DrawHudStringLen( const char *szIt )
 {
 	int l = 0;
 		// draw the string until we hit the null character or a newline character

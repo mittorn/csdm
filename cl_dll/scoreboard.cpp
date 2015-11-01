@@ -315,12 +315,12 @@ int CHudScoreboard :: Draw( float fTime )
 		list_slot++;
 
 		// draw all the players that belong to this team, indented slightly
-		list_slot = DrawPlayers( xpos_rel, list_slot, 10, team_info->name );
+		list_slot = DrawPlayers( xpos_rel, list_slot, 10, best_team );
 	}
 
 	// draw all the players who are not in a team
 	list_slot += 0.5;
-	DrawPlayers( xpos_rel, list_slot, 0, "" );
+	DrawPlayers( xpos_rel, list_slot, 0, 0 );
 
 	return 1;
 }
