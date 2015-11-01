@@ -173,8 +173,9 @@ int CHud :: Redraw( float flTime, int intermission )
 	{
 		if( gHUD.m_flTime >= g_TimeEnd )
 			g_progressbar_show = false;
-		int length = ( 200 / g_TimeLong ) * ( gHUD.m_flTime - g_TimeStart );
-		DrawHudString( 50, 100, length, "====================================================================", 255, 255, 255 );
+		int length = ( ( ScreenWidth/2-4 ) / g_TimeLong ) * ( gHUD.m_flTime - g_TimeStart );
+		DrawDarkRectangle( ScreenWidth/4, ScreenHeight*2/3, ScreenWidth/2, ScreenHeight/30 );
+		FillRGBA( ScreenWidth/4+2, ScreenHeight*2/3+2, length, ScreenHeight/30-4, 255, 140, 0, 255 );
 	}
 
 	return 1;
