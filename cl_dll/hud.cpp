@@ -102,7 +102,8 @@ void __CmdFunc_InputPlayerSpecial(void)
 /*	if ( gViewPort )
 	{
 		gViewPort->InputPlayerSpecial();
-	}  */
+	}
+  */
 }
 
 void __CmdFunc_CloseCommandMenu(void)
@@ -110,7 +111,8 @@ void __CmdFunc_CloseCommandMenu(void)
 /*	if ( gViewPort )
 	{
 		gViewPort->InputSignalHideCommandMenu();
-	} */
+	}
+ */
 }
 
 void __CmdFunc_ForceCloseCommandMenu( void )
@@ -118,7 +120,8 @@ void __CmdFunc_ForceCloseCommandMenu( void )
 	/*if ( gViewPort )
 	{
 		gViewPort->HideCommandMenu();
-	}*/
+	}
+*/
 }
 
 void __CmdFunc_ToggleServerBrowser( void )
@@ -241,9 +244,12 @@ int __MsgFunc_TeamMenu(const char *pszName, int iSize, void *pbuf)
 //	gViewPort->ShowVGUIMenu( 2 );
 	if( gMobileEngfuncs )
 	{
-		if( gHUD.m_GameMode != 2 )
+		if( gHUD.m_GameMode == 2 )
 			gEngfuncs.pfnClientCmd("alias _menu_gamemode_update \"touch_hide _menu_txt\"\n");
-		gEngfuncs.pfnClientCmd("_csdm_chooseteam\n");
+		else
+			gEngfuncs.pfnClientCmd("alias _menu_gamemode_update \"\"\n");
+		if( gHUD.m_GameMode )
+			gEngfuncs.pfnClientCmd("_csdm_chooseteam\n");
 	}
 	else
 		m_teamselect = true;
