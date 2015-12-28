@@ -45,6 +45,7 @@ void RenderScreenGlow(void);
 #endif
 
 cl_enginefunc_t gEngfuncs;
+mobile_engfuncs_t *gMobileEngfuncs = NULL;
 CHud gHUD;
 
 void InitInput (void);
@@ -74,6 +75,7 @@ int		DLLEXPORT HUD_GetHullBounds( int hullnumber, float *mins, float *maxs );
 void	DLLEXPORT HUD_Frame( double time );
 void	DLLEXPORT HUD_VoiceStatus(int entindex, qboolean bTalking);
 void	DLLEXPORT HUD_DirectorMessage( int iSize, void *pbuf );
+void    DLLEXPORT HUD_MobilityInterface( mobile_engfuncs_t *gpMobileEngfuncs );
 }
 
 /*
@@ -294,4 +296,14 @@ void DLLEXPORT HUD_DirectorMessage( int iSize, void *pbuf )
 	 gHUD.m_Spectator.DirectorMessage( iSize, pbuf );
 }
 
+void DLLEXPORT HUD_MobilityInterface( mobile_engfuncs_t *gpMobileEngfuncs )
+{
+    if( gpMobileEngfuncs->version != MOBILITY_API_VERSION )
+        return;
+    unsigned char color[4] = {255, 255, 255, 255};
+    gpMobileEngfuncs->pfnTouchAddDefaultButton( "flashlight", "touch_default/flash_light_filled.tga", "impulse 100", 0.920000, 0.000000, 1.000000, 0.135271, color, 2, 1.0, 0 );
+    gpMobileEngfuncs->pfnTouchAddDefaultButton( "scores", "touch_default/map.tga", "+showscores", 0.760000, 0.000000, 0.840000, 0.135271, color, 2, 1.0, 0 );
+    gpMobileEngfuncs->pfnTouchAddDefaultButton( "drop", "touch_default/map.tga", "drop", 0.640000, 0.000000, 0.680000, 0.135271, color, 2, 1.0, 0 );
+    gMobileEngfuncs = gpMobileEngfuncs;
+}
 
