@@ -2851,26 +2851,38 @@ ReturnSpot:
 }
 */
 
-static CBaseEntity *FindDMSpot()
+static CBaseEntity *FindCSDMSpot( CBaseEntity *pSpot )
 {
-	CBaseEntity *pSpot = UTIL_FindEntityByClassname( pSpot, "info_player_csdm" );
-	if( !pSpot )
+	pSpot = UTIL_FindEntityByClassname( pSpot, "info_player_csdm" );
+	if( FNullEnt( pSpot ) )
 		pSpot = UTIL_FindEntityByClassname( pSpot, "info_player_deathmatch" );
-	if( !pSpot )
+	if( FNullEnt( pSpot ) )
 		pSpot = UTIL_FindEntityByClassname( pSpot, "info_player_start" );
 	return pSpot;
 }
 
-static CBaseEntity *FindStartSpot()
+static CBaseEntity *FindDMSpot( CBaseEntity *pSpot )
 {
-	CBaseEntity *pSpot = UTIL_FindEntityByClassname( pSpot, "info_player_start" );
-	if( !pSpot )
-		pSpot = UTIL_FindEntityByClassname( pSpot, "info_player_deathmatch" );
-	if( !pSpot )
-		pSpot = UTIL_FindEntityByClassname( pSpot, "info_player_csdm" );
+	pSpot = UTIL_FindEntityByClassname( pSpot, "info_player_deathmatch" );
 	return pSpot;
 }
 
+static CBaseEntity *FindStartSpot( CBaseEntity *pSpot )
+{
+	pSpot = UTIL_FindEntityByClassname( pSpot, "info_player_start" );
+	return pSpot;
+}
+void CleanSpot(CBaseEntity *pSpot)
+{
+				CBaseEntity *ent = NULL;
+				return; //disable this now
+				while ( (ent = UTIL_FindEntityInSphere( ent, pSpot->pev->origin, 128 )) != NULL )
+				{
+					// if ent is a client, kill em (unless they are ourselves)
+					if ( ent->IsPlayer() && !(ent->edict() == player) )
+						ent->TakeDamage( VARS(INDEXENT(0)), VARS(INDEXENT(0)), 300, DMG_GENERIC );
+				}
+}
 edict_t *EntSelectSpawnPoint( CBaseEntity *pPlayer )
 {
 
@@ -2887,9 +2899,9 @@ edict_t *EntSelectSpawnPoint( CBaseEntity *pPlayer )
 			pSpot = g_pLastSpawn;
 			// Randomize the start spot
 			for ( int i = RANDOM_LONG(1,5); i > 0; i-- )
-				pSpot = FindDMSpot();
+				pSpot = FindDMSpot(pSpot);
 			if ( FNullEnt( pSpot ) )  // skip over the null point
-				pSpot = FindDMSpot();
+				pSpot = FindDMSpot(pSpot);
 
 			CBaseEntity *pFirstSpot = pSpot;
 
@@ -2902,7 +2914,7 @@ edict_t *EntSelectSpawnPoint( CBaseEntity *pPlayer )
 					{
 						if ( pSpot->pev->origin == Vector( 0, 0, 0 ) )
 						{
-							pSpot = FindDMSpot();
+							pSpot = FindDMSpot(pSpot);
 							continue;
 						}
 
@@ -2911,19 +2923,13 @@ edict_t *EntSelectSpawnPoint( CBaseEntity *pPlayer )
 					}
 				}
 				// increment pSpot
-				pSpot = FindDMSpot();
+				pSpot = FindDMSpot(pSpot);
 			} while ( pSpot != pFirstSpot ); // loop if we're not back to the start
 
 			// we haven't found a place to spawn yet,  so kill any guy at the first spawn point and spawn there
 			if ( !FNullEnt( pSpot ) )
 			{
-				CBaseEntity *ent = NULL;
-				while ( (ent = UTIL_FindEntityInSphere( ent, pSpot->pev->origin, 128 )) != NULL )
-				{
-					// if ent is a client, kill em (unless they are ourselves)
-					if ( ent->IsPlayer() && !(ent->edict() == player) )
-						ent->TakeDamage( VARS(INDEXENT(0)), VARS(INDEXENT(0)), 300, DMG_GENERIC );
-				}
+				CleanSpot(pSpot);
 				goto ReturnSpot;
 			}
 		}
@@ -2932,9 +2938,9 @@ edict_t *EntSelectSpawnPoint( CBaseEntity *pPlayer )
 			pSpot = g_pLastSpawn;
 			// Randomize the start spot
 			for ( int i = RANDOM_LONG(1,5); i > 0; i-- )
-				pSpot = FindStartSpot();
+				pSpot = FindStartSpot(pSpot);
 			if ( FNullEnt( pSpot ) )  // skip over the null point
-				pSpot = FindStartSpot();
+				pSpot = FindStartSpot(pSpot);
 
 			CBaseEntity *pFirstSpot = pSpot;
 
@@ -2947,7 +2953,7 @@ edict_t *EntSelectSpawnPoint( CBaseEntity *pPlayer )
 					{
 						if ( pSpot->pev->origin == Vector( 0, 0, 0 ) )
 						{
-							pSpot = FindStartSpot();
+							pSpot = FindStartSpot(pSpot);
 							continue;
 						}
 
@@ -2956,19 +2962,13 @@ edict_t *EntSelectSpawnPoint( CBaseEntity *pPlayer )
 					}
 				}
 				// increment pSpot
-				pSpot = FindStartSpot();
+				pSpot = FindStartSpot(pSpot);
 			} while ( pSpot != pFirstSpot ); // loop if we're not back to the start
 
 			// we haven't found a place to spawn yet,  so kill any guy at the first spawn point and spawn there
 			if ( !FNullEnt( pSpot ) )
 			{
-				CBaseEntity *ent = NULL;
-				while ( (ent = UTIL_FindEntityInSphere( ent, pSpot->pev->origin, 128 )) != NULL )
-				{
-					// if ent is a client, kill em (unless they are ourselves)
-					if ( ent->IsPlayer() && !(ent->edict() == player) )
-						ent->TakeDamage( VARS(INDEXENT(0)), VARS(INDEXENT(0)), 300, DMG_GENERIC );
-				}
+				CleanSpot(pSpot);
 				goto ReturnSpot;
 			}
 		}
@@ -2978,9 +2978,9 @@ edict_t *EntSelectSpawnPoint( CBaseEntity *pPlayer )
 		pSpot = g_pLastSpawn;
 		// Randomize the start spot
 		for ( int i = RANDOM_LONG(1,5); i > 0; i-- )
-			pSpot = FindDMSpot();
+			pSpot = FindCSDMSpot(pSpot);
 		if ( FNullEnt( pSpot ) )  // skip over the null point
-			pSpot = FindDMSpot();
+			pSpot = FindCSDMSpot(pSpot);
 
 		CBaseEntity *pFirstSpot = pSpot;
 
@@ -2993,7 +2993,7 @@ edict_t *EntSelectSpawnPoint( CBaseEntity *pPlayer )
 				{
 					if ( pSpot->pev->origin == Vector( 0, 0, 0 ) )
 					{
-						pSpot = FindDMSpot();
+						pSpot = FindCSDMSpot(pSpot);
 						continue;
 					}
 
@@ -3002,24 +3002,20 @@ edict_t *EntSelectSpawnPoint( CBaseEntity *pPlayer )
 				}
 			}
 			// increment pSpot
-			pSpot = FindDMSpot();
+			pSpot = FindDMSpot(pSpot);
 		} while ( pSpot != pFirstSpot ); // loop if we're not back to the start
 
 		// we haven't found a place to spawn yet,  so kill any guy at the first spawn point and spawn there
 		if ( !FNullEnt( pSpot ) )
 		{
-			CBaseEntity *ent = NULL;
-			while ( (ent = UTIL_FindEntityInSphere( ent, pSpot->pev->origin, 128 )) != NULL )
-			{
-				// if ent is a client, kill em (unless they are ourselves)
-				if ( ent->IsPlayer() && !(ent->edict() == player) )
-					ent->TakeDamage( VARS(INDEXENT(0)), VARS(INDEXENT(0)), 300, DMG_GENERIC );
-			}
+			CleanSpot(pSpot);
 			goto ReturnSpot;
 		}
 	}
 
 ReturnSpot:
+	if ( FNullEnt( pSpot ) )
+		pSpot = FindCSDMSpot( pSpot );
 
 	if ( FNullEnt( pSpot ) )
 	{
