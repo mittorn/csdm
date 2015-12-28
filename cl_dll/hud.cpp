@@ -207,9 +207,29 @@ int __MsgFunc_ScopeToggle(const char *pszName, int iSize, void *pbuf)
 	BEGIN_READ( pbuf, iSize );
 
 	if( READ_BYTE() )
+	{
 		Scope = true;
+		if( gMobileEngfuncs )
+		{ //( const char *name, const char *texture, const char *command, float x1, float y1, float x2, float y2, unsigned char *color, int round, float aspect, int flags );
+			unsigned char color[4] = {255, 255, 255, 255};
+			float x1 = ((float)gHUD.m_scrinfo.iWidth/2 - gHUD.m_scrinfo.iHeight / 2);
+			float x2 = ((float)gHUD.m_scrinfo.iWidth/2 + gHUD.m_scrinfo.iHeight / 2);
+			gMobileEngfuncs->pfnTouchAddClientButton( "_scope", "gfx/textures/scope.tga", "", x1 / gHUD.m_scrinfo.iWidth, 0, x2 / gHUD.m_scrinfo.iWidth, 1, color, 0, 0, 6 );
+			gMobileEngfuncs->pfnTouchAddClientButton( "_scope1", "*black", "", 0, 0, x1 / gHUD.m_scrinfo.iWidth, 1, color, 0, 0, 6 );
+			gMobileEngfuncs->pfnTouchAddClientButton( "_scope2", "*black", "", x2 / gHUD.m_scrinfo.iWidth, 0, 1, 1, color, 0, 0, 6 );
+			
+		}
+	}
 	else
+	{
 		Scope = false;
+		if( gMobileEngfuncs )
+		{
+			gMobileEngfuncs->pfnTouchRemoveButton("_scope");
+			gMobileEngfuncs->pfnTouchRemoveButton("_scope1");
+			gMobileEngfuncs->pfnTouchRemoveButton("_scope2");
+		}
+	}
 
 	return 1;
 }
@@ -219,7 +239,14 @@ int __MsgFunc_TeamMenu(const char *pszName, int iSize, void *pbuf)
 	//BEGIN_READ( pbuf, iSize );
 
 //	gViewPort->ShowVGUIMenu( 2 );
-	m_teamselect = true;
+	if( gMobileEngfuncs )
+	{
+		if( gHUD.m_GameMode != 2 )
+			gEngfuncs.pfnClientCmd("alias _menu_gamemode_update \"touch_hide _menu_txt\"\n");
+		gEngfuncs.pfnClientCmd("_csdm_chooseteam\n");
+	}
+	else
+		m_teamselect = true;
 
 	return 1;
 }
