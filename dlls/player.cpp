@@ -2850,6 +2850,27 @@ ReturnSpot:
 	return pSpot->edict();
 }
 */
+
+static CBaseEntity *FindDMSpot()
+{
+	CBaseEntity *pSpot = UTIL_FindEntityByClassname( pSpot, "info_player_csdm" );
+	if( !pSpot )
+		pSpot = UTIL_FindEntityByClassname( pSpot, "info_player_deathmatch" );
+	if( !pSpot )
+		pSpot = UTIL_FindEntityByClassname( pSpot, "info_player_start" );
+	return pSpot;
+}
+
+static CBaseEntity *FindStartSpot()
+{
+	CBaseEntity *pSpot = UTIL_FindEntityByClassname( pSpot, "info_player_start" );
+	if( !pSpot )
+		pSpot = UTIL_FindEntityByClassname( pSpot, "info_player_deathmatch" );
+	if( !pSpot )
+		pSpot = UTIL_FindEntityByClassname( pSpot, "info_player_csdm" );
+	return pSpot;
+}
+
 edict_t *EntSelectSpawnPoint( CBaseEntity *pPlayer )
 {
 
@@ -2866,9 +2887,9 @@ edict_t *EntSelectSpawnPoint( CBaseEntity *pPlayer )
 			pSpot = g_pLastSpawn;
 			// Randomize the start spot
 			for ( int i = RANDOM_LONG(1,5); i > 0; i-- )
-				pSpot = UTIL_FindEntityByClassname( pSpot, "info_player_deathmatch" );
+				pSpot = FindDMSpot();
 			if ( FNullEnt( pSpot ) )  // skip over the null point
-				pSpot = UTIL_FindEntityByClassname( pSpot, "info_player_deathmatch" );
+				pSpot = FindDMSpot();
 
 			CBaseEntity *pFirstSpot = pSpot;
 
@@ -2881,7 +2902,7 @@ edict_t *EntSelectSpawnPoint( CBaseEntity *pPlayer )
 					{
 						if ( pSpot->pev->origin == Vector( 0, 0, 0 ) )
 						{
-							pSpot = UTIL_FindEntityByClassname( pSpot, "info_player_deathmatch" );
+							pSpot = FindDMSpot();
 							continue;
 						}
 
@@ -2890,7 +2911,7 @@ edict_t *EntSelectSpawnPoint( CBaseEntity *pPlayer )
 					}
 				}
 				// increment pSpot
-				pSpot = UTIL_FindEntityByClassname( pSpot, "info_player_deathmatch" );
+				pSpot = FindDMSpot();
 			} while ( pSpot != pFirstSpot ); // loop if we're not back to the start
 
 			// we haven't found a place to spawn yet,  so kill any guy at the first spawn point and spawn there
@@ -2911,9 +2932,9 @@ edict_t *EntSelectSpawnPoint( CBaseEntity *pPlayer )
 			pSpot = g_pLastSpawn;
 			// Randomize the start spot
 			for ( int i = RANDOM_LONG(1,5); i > 0; i-- )
-				pSpot = UTIL_FindEntityByClassname( pSpot, "info_player_start" );
+				pSpot = FindStartSpot();
 			if ( FNullEnt( pSpot ) )  // skip over the null point
-				pSpot = UTIL_FindEntityByClassname( pSpot, "info_player_start" );
+				pSpot = FindStartSpot();
 
 			CBaseEntity *pFirstSpot = pSpot;
 
@@ -2926,7 +2947,7 @@ edict_t *EntSelectSpawnPoint( CBaseEntity *pPlayer )
 					{
 						if ( pSpot->pev->origin == Vector( 0, 0, 0 ) )
 						{
-							pSpot = UTIL_FindEntityByClassname( pSpot, "info_player_start" );
+							pSpot = FindStartSpot();
 							continue;
 						}
 
@@ -2935,7 +2956,7 @@ edict_t *EntSelectSpawnPoint( CBaseEntity *pPlayer )
 					}
 				}
 				// increment pSpot
-				pSpot = UTIL_FindEntityByClassname( pSpot, "info_player_start" );
+				pSpot = FindStartSpot();
 			} while ( pSpot != pFirstSpot ); // loop if we're not back to the start
 
 			// we haven't found a place to spawn yet,  so kill any guy at the first spawn point and spawn there
@@ -2957,9 +2978,9 @@ edict_t *EntSelectSpawnPoint( CBaseEntity *pPlayer )
 		pSpot = g_pLastSpawn;
 		// Randomize the start spot
 		for ( int i = RANDOM_LONG(1,5); i > 0; i-- )
-			pSpot = UTIL_FindEntityByClassname( pSpot, "info_player_csdm" );
+			pSpot = FindDMSpot();
 		if ( FNullEnt( pSpot ) )  // skip over the null point
-			pSpot = UTIL_FindEntityByClassname( pSpot, "info_player_csdm" );
+			pSpot = FindDMSpot();
 
 		CBaseEntity *pFirstSpot = pSpot;
 
@@ -2972,7 +2993,7 @@ edict_t *EntSelectSpawnPoint( CBaseEntity *pPlayer )
 				{
 					if ( pSpot->pev->origin == Vector( 0, 0, 0 ) )
 					{
-						pSpot = UTIL_FindEntityByClassname( pSpot, "info_player_csdm" );
+						pSpot = FindDMSpot();
 						continue;
 					}
 
@@ -2981,7 +3002,7 @@ edict_t *EntSelectSpawnPoint( CBaseEntity *pPlayer )
 				}
 			}
 			// increment pSpot
-			pSpot = UTIL_FindEntityByClassname( pSpot, "info_player_csdm" );
+			pSpot = FindDMSpot();
 		} while ( pSpot != pFirstSpot ); // loop if we're not back to the start
 
 		// we haven't found a place to spawn yet,  so kill any guy at the first spawn point and spawn there

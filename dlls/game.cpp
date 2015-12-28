@@ -31,7 +31,7 @@ cvar_t  allow_spectators = { "allow_spectators", "1.0", FCVAR_SERVER };		// 0 pr
 // END SPECTATOR
 
 // multiplayer server rules
-cvar_t	gamemode	= {"mp_gamemode","1", FCVAR_SERVER };
+cvar_t	gamemode	= {"mp_gamemode","2", FCVAR_SERVER };
 cvar_t	fraglimit	= {"mp_fraglimit","0", FCVAR_SERVER };
 cvar_t	timelimit	= {"mp_timelimit","0", FCVAR_SERVER };
 cvar_t	friendlyfire= {"mp_friendlyfire","0", FCVAR_SERVER };
