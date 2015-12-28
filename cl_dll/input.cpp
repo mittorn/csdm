@@ -842,7 +842,7 @@ int CL_ButtonBits( int bResetState )
 		if( m_teamselect )
 		{
 			m_teamselect = false;
-			ServerCmd("jointeam 1");
+			ServerCmd("jointeam 0");
 		}
 		else
 			bits |= IN_ATTACK2;
