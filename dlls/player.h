@@ -311,7 +311,7 @@ public:
 	void SetCustomDecalFrames( int nFrames );
 	int GetCustomDecalFrames( void );
 
-	void CBasePlayer::TabulateAmmo( void );
+	void TabulateAmmo( void );
 
 	float m_flStartCharge;
 	float m_flAmmoStartCharge;

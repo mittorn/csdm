@@ -298,7 +298,7 @@ int CHudDeathNotice :: MsgFunc_DeathMsg( const char *pszName, int iSize, void *p
 			if (rgDeathNoticeList[i].Headshot) ConsolePrint( " with headshot" ); 
 		}
 
-		if ( killedwith && *killedwith && (*killedwith > 13 ) && strcmp( killedwith, "d_world" ) && !rgDeathNoticeList[i].iTeamKill )
+		if ( *killedwith && (*killedwith > 13 ) && strcmp( killedwith, "d_world" ) && !rgDeathNoticeList[i].iTeamKill )
 		{
 			if (rgDeathNoticeList[i].Headshot) 
 				ConsolePrint( " from " ); 

@@ -90,8 +90,9 @@ int CHudMOTD :: Draw( float fTime )
 	gHUD.DrawDarkRectangle(xpos-5, ypos_r - 5, xmax - xpos+10, height + 10);
 	while ( *ch )
 	{
+		char *next_line;
 		int line_length = 0;  // count the length of the current line
-		for ( char *next_line = ch; *next_line != '\n' && *next_line != 0; next_line++ )
+		for ( next_line = ch; *next_line != '\n' && *next_line != 0; next_line++ )
 			line_length += gHUD.m_scrinfo.charWidths[ *next_line ];
 		char *top = next_line;
 		if ( *top == '\n' )

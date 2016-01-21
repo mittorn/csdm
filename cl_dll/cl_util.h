@@ -101,7 +101,7 @@ inline int DrawConsoleString( int x, int y, const char *string )
 		return gEngfuncs.pfnDrawConsoleString( x, y, (char*) string );
 	
 }
-inline int DrawSetTextColor(float r, float g, float b)
+inline void DrawSetTextColor(float r, float g, float b)
 {
 	if( hud_textmode->value )
 		color[0]=r, color[1] = g, color[2] = b;

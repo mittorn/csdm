@@ -2063,7 +2063,7 @@ void CBasePlayer::CheckTimeBasedDamage()
 		return;
 
 	// only check for time based damage approx. every 2 seconds
-	if (abs(gpGlobals->time - m_tbdPrev) < 2.0)
+	if (fabs(gpGlobals->time - m_tbdPrev) < 2.0)
 		return;
 	
 	m_tbdPrev = gpGlobals->time;
@@ -2818,7 +2818,7 @@ edict_t *EntSelectSpawnPoint( CBaseEntity *pPlayer )
 			while ( (ent = UTIL_FindEntityInSphere( ent, pSpot->pev->origin, 128 )) != NULL )
 			{
 				// if ent is a client, kill em (unless they are ourselves)
-				if ( ent->IsPlayer() && !(ent->edict() == player) )
+				if ( ent->IsPlayer() && !(ent->edict() == (edict_t *)player) )
 					ent->TakeDamage( VARS(INDEXENT(0)), VARS(INDEXENT(0)), 300, DMG_GENERIC );
 			}
 			goto ReturnSpot;
@@ -2879,7 +2879,7 @@ void CleanSpot(CBaseEntity *pSpot)
 				while ( (ent = UTIL_FindEntityInSphere( ent, pSpot->pev->origin, 128 )) != NULL )
 				{
 					// if ent is a client, kill em (unless they are ourselves)
-					if ( ent->IsPlayer() && !(ent->edict() == player) )
+					if ( ent->IsPlayer() && !(ent->edict() == (edict_t *)player) )
 						ent->TakeDamage( VARS(INDEXENT(0)), VARS(INDEXENT(0)), 300, DMG_GENERIC );
 				}
 }

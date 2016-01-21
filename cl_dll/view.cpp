@@ -135,7 +135,7 @@ void V_NormalizeAngles( float *angles )
 	}
 }
 
-/*
+
 ===================
 V_InterpolateAngles
 
